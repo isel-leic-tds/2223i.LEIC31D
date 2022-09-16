@@ -1,14 +1,19 @@
 import kotlin.test.*
-import tds.Date
+import tds.*
+import java.lang.IllegalArgumentException
 
 class DateTest {
     //@Ignore
     @Test
     fun createDate() {
-        val d = Date(14,9,2022)
+        val month = 9
+        val d = Date(14,month,2022)
         assertEquals(14,d.day)
         assertEquals(9,d.month)
         assertEquals(2022,d.year)
+        assertFailsWith<IllegalArgumentException> {
+            assertEquals(40, Date(40, 6, 2024).day)
+        }
     }
     @Test
     fun `convert Date to String`(){
@@ -26,9 +31,11 @@ class DateTest {
         val d = Date(14,9,2022)
         assertEquals(Date(16,9,2022),d.addDays(2))
         assertEquals(Date(29,10,2022),d.addDays(45))
-
+        assertEquals(Date(1,1,2023),Date(25,12,2022).addDays(7))
     }
 }
+
+
 
 
 
