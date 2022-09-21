@@ -10,4 +10,14 @@ fun main() {
         val elem = stk.pop()
         println(elem)
     }
+
+    var s = Stack<String>()
+    s = s.push("ISEL")
+    s = s.push("LEIC")
+    s = s.push("TDS")
+    println( s.top() )
+    while ( !s.isEmpty() ) {
+        println(s.top())
+        s = s.pop()
+    }
 }
