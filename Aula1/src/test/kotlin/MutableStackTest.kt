@@ -14,7 +14,7 @@ class MutableStackTest {
         assertEquals(10,sut.top())
     }
     @Test fun `Non empty MutableStack operations`() {
-        val elems = (0..10).toList()
+        val elems = 0..10
         val sut = MutableStack<Int>()
         elems.forEach { sut.push(it) }
         assertFalse(sut.isEmpty())

@@ -1,9 +1,9 @@
-import tds.Stack
+import tds.*
 import kotlin.test.*
 
 class ImmutableStackTest {
     @Test fun `Empty Stack operations`() {
-        val sut = Stack<Int>()
+        val sut = emptyStack<Int>()
         assertTrue(sut.isEmpty())
         val e1 = assertFailsWith<NoSuchElementException> { sut.top() }
         assertEquals("empty stack", e1.message)
@@ -14,9 +14,9 @@ class ImmutableStackTest {
         assertEquals(10,after.top())
     }
     @Test fun `Non empty Stack operations`() {
-        val elems = (0..10).toList()
-        var sut = Stack<Int>()
-        elems.forEach { sut = sut.push(it) }
+        val elems = (0..10)
+        var sut = emptyStack<Int>()
+        elems.forEach{ sut = sut.push(it) }
         assertFalse(sut.isEmpty())
         assertEquals(elems.last(),sut.top())
         elems.reversed().forEach {

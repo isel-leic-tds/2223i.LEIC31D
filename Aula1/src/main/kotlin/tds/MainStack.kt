@@ -5,19 +5,27 @@ fun main() {
     stk.push("ISEL")
     stk.push("LEIC")
     stk.push("TDS")
-    println(stk.top())
+    show(stk)
     while( !stk.isEmpty() ) {
         val elem = stk.pop()
         println(elem)
     }
 
-    var s = Stack<String>()
+    /*
+    var s = emptyStack<String>()
     s = s.push("ISEL")
     s = s.push("LEIC")
     s = s.push("TDS")
-    println( s.top() )
+     */
+    var s = stackOf("ISEL","LEIC","TDS")
+    show(s)
     while ( !s.isEmpty() ) {
         println(s.top())
         s = s.pop()
     }
+}
+
+fun <T> show(stk: IStack<T>) {
+    if (!stk.isEmpty())
+        println("Top = ${stk.top()}")
 }
