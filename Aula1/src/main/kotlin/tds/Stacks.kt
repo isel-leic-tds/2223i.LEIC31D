@@ -7,11 +7,7 @@ class MutableStack<T> {
     private val headNotNull
         get() = head ?: throw NoSuchElementException("empty stack")
     fun push(elem: T) { head = Node(elem,head) }
-    fun pop(): T { // = headNotNull.also { head = it.next }.elem
-        val h = headNotNull
-        head = h.next
-        return h.elem
-    }
+    fun pop(): T = headNotNull.also { head = it.next }.elem
     fun isEmpty() = head==null
     fun top() = headNotNull.elem
 }
@@ -22,7 +18,6 @@ class Stack<T> private constructor(private val head: Node<T>?) {
     private val headNotNull by lazy {
         head ?: throw NoSuchElementException("empty stack")
     }
-    //fun pop() = Pair(headNotNull.elem,Stack(headNotNull.next))
     fun pop() = Stack(headNotNull.next)
     fun isEmpty(): Boolean = head==null
     fun top() = headNotNull.elem
