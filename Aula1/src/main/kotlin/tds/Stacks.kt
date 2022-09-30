@@ -1,6 +1,6 @@
 package tds
 
-class Node<T>(val elem: T, val next: Node<T>?)
+private class Node<T>(val elem: T, val next: Node<T>?)
 
 interface IStack<T> : Iterable<T> {
     fun isEmpty(): Boolean
@@ -23,7 +23,6 @@ class MutableStack<T>: IStack<T> {
     override fun iterator(): Iterator<T> = NodeIter(head)
     fun push(elem: T) { head = Node(elem,head) }
     fun pop(): T = headNotNull.also { head = it.next }.elem
-
 }
 
 interface Stack<T>: IStack<T> {
@@ -56,9 +55,7 @@ fun <T> emptyStack(): Stack<T> = EmptyStack()
 
 fun <T> stackOf(vararg elems: T): Stack<T> =
     if (elems.isEmpty()) EmptyStack()
-    else NoEmptyStack(
-        elems.fold(null as Node<T>?){ node, e -> Node(e,node) } as Node<T>
-    )
+    else NoEmptyStack( elems.fold(null as Node<T>?){ node, e -> Node(e,node) } as Node<T> )
 
 
 
