@@ -2,25 +2,28 @@ package tds
 
 class Node<T>(val elem: T, val next: Node<T>?)
 
-interface IStack<T> {
+interface IStack<T> : Iterable<T> {
     fun isEmpty(): Boolean
     fun top(): T
 }
 
 private fun throwEmpty(): Nothing = throw NoSuchElementException("empty stack")
 
-/* TODO: Eliminate this abstract class because it's just the base of MutableStack */
-abstract class BaseStack<T>: IStack<T> {
-    protected abstract val head: Node<T>?
-    protected val headNotNull get() = head ?: throwEmpty()
-    override fun isEmpty() = head==null
-    final override fun top() = headNotNull.elem
+private class NodeIter<T>(private var after:Node<T>?) : Iterator<T> {
+    override fun hasNext() = after!=null
+    override fun next() =
+        (after?:throw NoSuchElementException()).also { after=it.next }.elem
 }
 
-class MutableStack<T>: BaseStack<T>(), IStack<T> {
-    override var head: Node<T>? = null
+class MutableStack<T>: IStack<T> {
+    private var head: Node<T>? = null
+    private val headNotNull get() = head ?: throwEmpty()
+    override fun isEmpty() = head==null
+    override fun top() = headNotNull.elem
+    override fun iterator(): Iterator<T> = NodeIter(head)
     fun push(elem: T) { head = Node(elem,head) }
     fun pop(): T = headNotNull.also { head = it.next }.elem
+
 }
 
 interface Stack<T>: IStack<T> {
@@ -28,11 +31,17 @@ interface Stack<T>: IStack<T> {
     fun pop(): Stack<T>
 }
 
+private object EmptyIter : Iterator<Nothing> {
+    override fun hasNext() = false
+    override fun next() = throw NoSuchElementException()
+}
+
 private class EmptyStack<T>: Stack<T> {
     override fun isEmpty() = true
     override fun top() = throwEmpty()
     override fun pop() = throwEmpty()
     override fun push(elem: T) = NoEmptyStack(Node(elem,null))
+    override fun iterator() = EmptyIter
 }
 
 private class NoEmptyStack<T>(private val head: Node<T>): Stack<T> {
@@ -40,27 +49,16 @@ private class NoEmptyStack<T>(private val head: Node<T>): Stack<T> {
     override fun top() = head.elem
     override fun pop() = if (head.next==null) EmptyStack() else NoEmptyStack(head.next)
     override fun push(elem: T) = NoEmptyStack(Node(elem,head))
+    override fun iterator(): Iterator<T> = NodeIter(head)
 }
-
-/* TODO: No longer used. Replaced by EmptyStack and NoEmptyStack
-private class ImmutableStack<T> private constructor(override val head: Node<T>?): BaseStack<T>(), Stack<T> {
-    constructor() : this(null)
-    override fun push(elem: T) = ImmutableStack(Node(elem,head))
-    override fun pop() = ImmutableStack(headNotNull.next)
-    override fun isEmpty(): Boolean {
-        print("Stack<T>:isEmpty ")
-        return super.isEmpty()
-    }
-} */
 
 fun <T> emptyStack(): Stack<T> = EmptyStack()
 
-// TODO: Optimize this implementation by building just one instance of NoEmptyStack
-fun <T> stackOf(vararg elems: T): Stack<T> {
-    var s = emptyStack<T>()
-    elems.forEach { s = s.push(it) }
-    return s
-}
+fun <T> stackOf(vararg elems: T): Stack<T> =
+    if (elems.isEmpty()) EmptyStack()
+    else NoEmptyStack(
+        elems.fold(null as Node<T>?){ node, e -> Node(e,node) } as Node<T>
+    )
 
 
 

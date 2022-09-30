@@ -1,0 +1,10 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class A {
+   -p:Int
+   #f():Char
+}
+A <|.. C : xpto
+C -> Node : head
+@enduml

@@ -11,13 +11,9 @@ fun main() {
         println(elem)
     }
 
-    /*
-    var s = emptyStack<String>()
-    s = s.push("ISEL")
-    s = s.push("LEIC")
-    s = s.push("TDS")
-     */
     var s = stackOf("ISEL","LEIC","TDS")
+    //for(e in s) print("$e ")
+    s.forEach{ print("$it ") }
     show(s)
     while ( !s.isEmpty() ) {
         println(s.top())

@@ -15,8 +15,9 @@ class ImmutableStackTest {
     }
     @Test fun `Non empty Stack operations`() {
         val elems = (0..10)
-        var sut = emptyStack<Int>()
-        elems.forEach{ sut = sut.push(it) }
+        //var sut = emptyStack<Int>()
+        //elems.forEach{ sut = sut.push(it) }
+        var sut = stackOf(*elems.toList().toTypedArray())
         assertFalse(sut.isEmpty())
         assertEquals(elems.last(),sut.top())
         elems.reversed().forEach {

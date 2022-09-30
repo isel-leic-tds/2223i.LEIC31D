@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+'hide members
+'hide empty members
+
+class Node<T>
+Node : +elem :T
+Node --> Node : +next
+
+interface IStack<T>
+IStack : +isEmpty() :Boolean
+IStack : +top() :T
+
+class MutableStack<T> {
+  -headNotNull:Node<T>
+  +isEmpty():Boolean
+  +top():T
+  +push(elem:T)
+  +pop():T
+}
+IStack <|... MutableStack
+Node <-- MutableStack : -head
+
+interface Stack<T> {
+  +push(elem:T): Statck<T>
+  +pop(): Stack<T>
+}
+IStack <|-- Stack
+
+class EmptyStack<T> {
+  +isEmpty() :Boolean
+  +top() :Nothing
+  +push(elem:T) :Stack<T>
+  +pop() :Nothing
+}
+Stack <|.. EmptyStack
+
+class NoEmptyStack<T> {
+  +isEmpty() :Boolean
+  +top() :T
+  +push(elem:T) :Stack<T>
+  +pop() :Stack<T>
+}
+Stack <|.. NoEmptyStack
+Node <-- NoEmptyStack : -head
+@enduml
