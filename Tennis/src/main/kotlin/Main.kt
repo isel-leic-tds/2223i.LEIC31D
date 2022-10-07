@@ -1,4 +1,4 @@
-import tennis.*
+import tennis.oop.*
 
 fun main() {
     var score: Score = InitialScore

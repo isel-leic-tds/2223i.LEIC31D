@@ -1,4 +1,4 @@
-package tennis
+package tennis.first
 
 import Player
 
@@ -7,7 +7,7 @@ enum class Points(val number:Int) {
     fun next() = values()[ordinal+1]
 }
 
-class Score(val pointsOfA: Points, val pointsOfB: Points) {
+data class Score(val pointsOfA: Points, val pointsOfB: Points) {
     val placard get() = when {
         pointsOfA == pointsOfB && pointsOfA == Points.FORTY -> "Deuce"
         pointsOfA == Points.GAME && pointsOfB == Points.FORTY -> "Advantage A"
@@ -17,11 +17,13 @@ class Score(val pointsOfA: Points, val pointsOfB: Points) {
         else -> "${pointsOfA.number} - ${pointsOfB.number}"
     }
     fun next(winner: Player) = when {
-        pointsOfA == Points.GAME && pointsOfB == Points.FORTY && winner==Player.A ->
-            Score(pointsOfA,Points.LOVE)
-        pointsOfB == Points.GAME && pointsOfA == Points.FORTY && winner==Player.B ->
-            Score(Points.LOVE,pointsOfB)
-        //  TODO: ...
+        pointsOfA == Points.GAME && pointsOfB == Points.FORTY ->
+            if (winner==Player.A) Score(pointsOfA,Points.LOVE)
+            else Score(Points.FORTY,Points.FORTY)
+        pointsOfB == Points.GAME && pointsOfA == Points.FORTY ->
+            if (winner==Player.B) Score(Points.LOVE,pointsOfB)
+            else Score(Points.FORTY,Points.FORTY)
+        isGame() -> throw IllegalStateException()
         else ->
             if (winner==Player.A) Score(pointsOfA.next(),pointsOfB)
             else Score(pointsOfA,pointsOfB.next())

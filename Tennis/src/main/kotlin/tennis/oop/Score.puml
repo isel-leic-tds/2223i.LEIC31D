@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+hide empty members
+
+interface Score {
+    {abstract} placard
+    isGame()
+    {abstract} next(winner)
+}
+
+Score <|.left. Game : "  "
+Game : winner
+
+Score <|. ByPoints : "        "
+
+enum Points{
+    LOVE
+    FIFTEEN
+    THIRTY
+    FORTY
+}
+ByPoints o--> Points : pointsA
+ByPoints o--> Points : pointsB
+
+Score <|.. Advance
+Advance : player
+
+Score <|.. Deuce
+class Deuce <<(O,cyan)>>
+ByPoints <|-- InitialScore
+class InitialScore <<O,cyan>>
+
+@enduml
