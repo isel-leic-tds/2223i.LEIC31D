@@ -1,4 +1,4 @@
-import tennis.oop.*
+import tennis.fp.*
 import kotlin.test.*
 
 class ScoreTest {
@@ -17,5 +17,10 @@ class ScoreTest {
         assertEquals("Game of A",sut.placard)
         assertFailsWith<IllegalStateException> { sut.next(Player.A) }
         assertTrue(InitialScore.play("AABABA").isGame())
+    }
+    @Test fun `Same Points`() {
+        val p1 = Points.LOVE.next().next()
+        assertEquals(Points.THIRTY,p1)
+        assertSame(Points.THIRTY,p1)
     }
 }

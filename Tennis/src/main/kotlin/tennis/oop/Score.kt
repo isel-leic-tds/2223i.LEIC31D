@@ -12,6 +12,7 @@ enum class Points(val number:Int) {
 class Points private constructor(val number: Int) {
     fun next() = values[values.indexOfFirst { it.number==number }+1]
     companion object {
+        operator fun invoke(number: Int) = values.first { it.number==number }
         val values = listOf(0,15,30).map { Points(it) }
         val LOVE = values.first()
         val THIRTY = values.last()

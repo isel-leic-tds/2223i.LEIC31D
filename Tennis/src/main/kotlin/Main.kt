@@ -1,4 +1,4 @@
-import tennis.oop.*
+import tennis.fp.*
 
 fun main() {
     var score: Score = InitialScore
@@ -10,7 +10,9 @@ fun main() {
     println("Finish")
 }
 
-enum class Player{ A, B }
+enum class Player{ A, B;
+    fun other() = if(this==A) B else A
+}
 
 fun readWinner(): Player {
     print("winner A or B ? ")
