@@ -1,12 +1,25 @@
 import pt.isel.tds.ttt.model.*
+import pt.isel.tds.ttt.ui.playAction
 import pt.isel.tds.ttt.ui.print
+import pt.isel.tds.ttt.ui.readCommand
 
 fun main() {
-    val board: Board = initialBoard()
-        .play(4.toPosition())
-        .play(0.toPosition())
-        .play(1.toPosition())
-        .play(2.toPosition())
-        .play(7.toPosition())
-    board.print()
+    var game: Board? = null
+    while( true ) {
+        try {
+            val (name, args) = readCommand()
+            when (name) {
+                "EXIT" -> break
+                "NEW" -> game = initialBoard()
+                "GRID" -> {}
+                "PLAY" -> game = playAction(args, game)
+            }
+            game?.print()
+        } catch (ex: Exception) {
+            println(ex.message)
+        }
+    }
 }
+
+
+

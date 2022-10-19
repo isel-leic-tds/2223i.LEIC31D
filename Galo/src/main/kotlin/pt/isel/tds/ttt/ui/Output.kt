@@ -8,6 +8,7 @@ import pt.isel.tds.ttt.model.*
    | X |
 ---+---+---
    |   |
+Turn: O
  */
 
 val divLine = "---+".repeat(BOARD_DIM-1)+"---"
