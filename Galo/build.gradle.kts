@@ -27,3 +27,13 @@ tasks.withType<KotlinCompile> {
 application {
     mainClass.set("MainKt")
 }
+
+tasks.jar {
+    manifest.attributes["Main-Class"] = "pt.isel.tds.ttt.MainKt"
+    val dependencies = configurations
+        .runtimeClasspath
+        .get()
+        .map(::zipTree) // OR .map { zipTree(it) }
+    from(dependencies)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

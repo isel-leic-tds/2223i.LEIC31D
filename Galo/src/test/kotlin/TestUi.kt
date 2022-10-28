@@ -1,5 +1,5 @@
 import pt.isel.tds.ttt.model.*
-import pt.isel.tds.ttt.ui.getCommands
+import pt.isel.tds.ttt.ui.fp.getCommands
 import pt.isel.tds.ttt.ui.print
 import pt.isel.tds.ttt.ui.readCommand
 import java.io.*
