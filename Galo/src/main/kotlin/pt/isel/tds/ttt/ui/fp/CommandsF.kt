@@ -1,10 +1,7 @@
 package pt.isel.tds.ttt.ui.fp
 
 import pt.isel.tds.ttt.BoardSerializer
-import pt.isel.tds.ttt.model.Board
-import pt.isel.tds.ttt.model.Game
-import pt.isel.tds.ttt.model.createGame
-import pt.isel.tds.ttt.model.play
+import pt.isel.tds.ttt.model.*
 import pt.isel.tds.ttt.storage.FileStorage
 import pt.isel.tds.ttt.storage.Storage
 import pt.isel.tds.ttt.ui.playAction
@@ -29,7 +26,21 @@ fun getCommands(storage: Storage<String, Board>) = mapOf(
     "PLAY" to Command(
         argsSyntax = "<position>",
         execute = { args, g ->
-            TODO()
+            require(args.size == 1){ "Please provide a single Index position!" }
+            require(args[0].length == 1){ "Position should be a single Integer digit!" }
+            require(g != null){ "You must start a new game before playing!" }
+            val index = args[0].toIntOrNull()
+            require(index != null){ "Not a valid integer index!" }
+            g.play(index.toPosition(), storage)
+        }
+    ),
+    "REFRESH" to Command(
+        argsSyntax = "refresh",
+        execute = { _, g ->
+            require(g != null){ "You must start a new game before playing!" }
+            val b = storage.read(g.id)
+            check(b != null)
+            g.copy(board = b)
         }
     ),
     "EXIT" to Command(

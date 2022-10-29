@@ -15,19 +15,12 @@ fun createGame(
     id: String,
     storage: Storage<String, Board>
 ): Game {
-    val existing = storage.read(id)
-    if(existing == null) {
-        val board = initialBoard()
-        storage.create(id, board)
-        return Game(id, X, board)
-    }
-    if(existing.moves.size <= 1) {
-        return Game(id, O, existing)
-    }
-    storage.delete(id)
-    val board = initialBoard()
-    storage.create(id, board)
-    return Game(id, X, board)
+    val board = storage.read(id)
+    if(board != null && board.moves.size <= 1)
+        return Game(id, O, board) // already stored in storage
+    if(board != null)
+        storage.delete(id) // remove existing board before creating a new one
+    return Game(id, X, initialBoard().also { storage.create(id, it) })
 }
 
 fun Game.play(pos: Position, storage: Storage<String, Board>): Game {
