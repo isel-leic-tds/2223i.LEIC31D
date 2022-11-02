@@ -27,6 +27,6 @@ fun Game.play(pos: Position, storage: Storage<String, Board>): Game {
     check(board is BoardRun) { "Game over" }
     check(player == board.turn) { "Not your turn" }
     val newBoard = board.play(pos)
-    storage.update(this.id, this.board)
+    storage.update(this.id, newBoard)
     return copy( board = newBoard)
 }

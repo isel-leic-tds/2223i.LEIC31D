@@ -44,7 +44,7 @@ object BoardSerializer : Serializer<Board, String> {
                 require(it.length == 2) { "Each line must have exactly 2 chars with <index><Player>" }
                 Move(it[0].digitToInt().toPosition(), Player.valueOf(it[1].toString()))
             }
-        val player = if(moves.isEmpty()) Player.O else moves.values.last()
+        val player = if(moves.isEmpty()) Player.X else moves.values.last().other()
         return when(boardKind) {
             BoardRun::class.simpleName -> BoardRun(moves, player)
             BoardDraw::class.simpleName -> BoardDraw(moves)
