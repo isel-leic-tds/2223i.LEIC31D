@@ -13,6 +13,10 @@ repositories {
 }
 
 dependencies {
+    // Mongo
+    implementation("org.litote.kmongo:kmongo:4.7.2")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.17.1")
+
     testImplementation(kotlin("test"))
 }
 
