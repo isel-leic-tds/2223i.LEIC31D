@@ -15,23 +15,27 @@ class StopWatch {
     var time by mutableStateOf(0L)
         private set
     private val scope = CoroutineScope(Dispatchers.Unconfined)
-    private var running = false
+    private var job: Job? = null
 
     fun reset() {
         time = 0
     }
     fun start() {
-        if (running) return
-        scope.launch{
-            running = true
-            println("start(): ${Thread.currentThread().name}")
-            while(running) {
-                delay(100)
-                time += 100 // TODO: cumulative error
+        if (job==null) {
+            job = scope.launch {
+                println("start(): ${Thread.currentThread().name}")
+                var timeStamp = System.currentTimeMillis()
+                while (true) {
+                    delay(100)
+                    val now = System.currentTimeMillis()
+                    time += now - timeStamp
+                    timeStamp = now
+                }
             }
         }
     }
     fun pause() {
-        running = false
+        job?.cancel()
+        job = null
     }
 }
