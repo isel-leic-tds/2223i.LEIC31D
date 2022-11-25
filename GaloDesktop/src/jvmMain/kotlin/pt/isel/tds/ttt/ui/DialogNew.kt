@@ -9,6 +9,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogState
@@ -17,7 +18,7 @@ import androidx.compose.ui.window.DialogState
 fun DialogNewGame(onOk: (String)->Unit, onCancel: ()->Unit) = Dialog(
     onCloseRequest = onCancel,
     title = "New Game",
-    state = DialogState(width = 300.dp, height = 200.dp)
+    state = DialogState(width = 300.dp, height = Dp.Unspecified)
 ) {
     var name by remember { mutableStateOf("") }
     Column {

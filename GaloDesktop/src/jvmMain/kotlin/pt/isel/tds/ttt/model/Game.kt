@@ -2,8 +2,7 @@ package pt.isel.tds.ttt.model
 
 import pt.isel.tds.ttt.model.Player.O
 import pt.isel.tds.ttt.model.Player.X
-import pt.isel.tds.ttt.storage.FileStorage
-import pt.isel.tds.ttt.storage.Storage
+import pt.isel.tds.ttt.storage.*
 
 data class Game(
     val id: String,
@@ -13,7 +12,7 @@ data class Game(
 
 fun createGame(
     id: String,
-    storage: Storage<String, Board>
+    storage: BoardStorage
 ): Game {
     val board = storage.read(id)
     if(board != null && board.moves.size <= 1)
@@ -23,7 +22,7 @@ fun createGame(
     return Game(id, X, initialBoard().also { storage.create(id, it) })
 }
 
-fun Game.play(pos: Position, storage: Storage<String, Board>): Game {
+fun Game.play(pos: Position, storage: BoardStorage): Game {
     check(board is BoardRun) { "Game over" }
     check(player == board.turn) { "Not your turn" }
     val newBoard = board.play(pos)

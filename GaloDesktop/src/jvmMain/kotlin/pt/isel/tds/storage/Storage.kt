@@ -1,4 +1,4 @@
-package pt.isel.tds.ttt.storage
+package pt.isel.tds.storage
 
 interface Storage<K,T> {
     fun create(id: K, value: T)

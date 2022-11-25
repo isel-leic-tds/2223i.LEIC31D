@@ -1,4 +1,4 @@
-package pt.isel.tds.ttt.storage
+package pt.isel.tds.storage
 
 /**
  * Given an object obj it should be equivalent to the resulting

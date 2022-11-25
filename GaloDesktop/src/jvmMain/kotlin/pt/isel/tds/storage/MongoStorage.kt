@@ -1,4 +1,4 @@
-package pt.isel.tds.ttt.storage
+package pt.isel.tds.storage
 
 import com.mongodb.client.MongoDatabase
 import org.litote.kmongo.deleteOneById

@@ -10,7 +10,10 @@ typealias Move = Pair<Position,Player>
 
 typealias Moves = Map<Position,Player>
 
-sealed class Board(val moves: Moves)
+sealed class Board(val moves: Moves) {
+    override fun equals(other: Any?) =
+        other is Board && moves==other.moves
+}
 class BoardRun(mvs: Moves, val turn: Player): Board(mvs)
 class BoardWin(mvs: Moves, val winner: Player): Board(mvs)
 class BoardDraw(mvs: Moves): Board(mvs)

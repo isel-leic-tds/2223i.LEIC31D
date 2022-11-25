@@ -1,13 +1,13 @@
 package pt.isel.tds.ttt.ui
 
 import androidx.compose.runtime.*
+import pt.isel.tds.storage.FileStorage
 import pt.isel.tds.ttt.model.*
 import pt.isel.tds.ttt.storage.BoardSerializer
-import pt.isel.tds.ttt.storage.FileStorage
-import pt.isel.tds.ttt.storage.Storage
+import pt.isel.tds.ttt.storage.BoardStorage
 
 class ViewModel {
-    val storage: Storage<String, Board> = FileStorage("games",BoardSerializer)
+    val storage: BoardStorage = FileStorage("games", BoardSerializer)
     var game: Game? by mutableStateOf(null)
         private set
     val stopWatch = StopWatch()
@@ -23,12 +23,21 @@ class ViewModel {
         openDialog = !openDialog
     }
 
-    fun play(pos: Position) {
-        if (game?.board is BoardRun) {
-            game = game?.play(pos,storage)
-            if (game?.board !is BoardRun) stopWatch.pause()
-        }
-        println("Play: ${Thread.currentThread().name}")
+    private fun updateGame(g: Game) {
+        if (g.board !is BoardRun) stopWatch.pause()
+        game = g
     }
 
+    fun play(pos: Position) {
+        val g = game ?: return
+        if (g.board is BoardRun && g.player==g.board.turn)
+            updateGame( g.play(pos,storage) )
+    }
+
+    fun refresh() {
+        val g = game ?: return
+        val board = storage.read(g.id)
+        checkNotNull(board)
+        updateGame( g.copy(board = board) )
+    }
 }
