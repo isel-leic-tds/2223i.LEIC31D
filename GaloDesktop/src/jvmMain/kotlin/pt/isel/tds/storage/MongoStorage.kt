@@ -17,7 +17,7 @@ class MongoStorage<T>(
     /**
      * Requires a unique id.
      */
-    override fun create(id: String, obj: T) {
+    override suspend fun create(id: String, obj: T) {
         /**
          * Validate that id is unique and there is no other file with that path.
          */
@@ -29,7 +29,7 @@ class MongoStorage<T>(
         val objStr = serializer.write(obj) // Entity -> String <=> obj -> String
         collection.insertOne(Doc(id, objStr))
     }
-    override fun read(id: String): T? {
+    override suspend fun read(id: String): T? {
         val doc = collection.findOneById(id) ?: return null
 
         /**
@@ -40,13 +40,13 @@ class MongoStorage<T>(
         return serializer.parse(objStr)
     }
 
-    override fun update(id: String, obj: T) {
+    override suspend fun update(id: String, obj: T) {
         require(read(id) != null) { "There is no document with given id $id" }
         val objStr = serializer.write(obj) // Entity -> String <=> obj -> String
         collection.replaceOneById(id, Doc(id, objStr))
     }
 
-    override fun delete(id: String) {
+    override suspend fun delete(id: String) {
         require(read(id) != null) { "There is no document with given id $id" }
         collection.deleteOneById(id)
     }

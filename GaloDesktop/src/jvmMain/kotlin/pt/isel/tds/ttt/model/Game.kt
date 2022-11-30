@@ -1,5 +1,7 @@
 package pt.isel.tds.ttt.model
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import pt.isel.tds.ttt.model.Player.O
 import pt.isel.tds.ttt.model.Player.X
 import pt.isel.tds.ttt.storage.*
@@ -10,7 +12,7 @@ data class Game(
     val board: Board
 )
 
-fun createGame(
+suspend fun createGame(
     id: String,
     storage: BoardStorage
 ): Game {
@@ -22,10 +24,12 @@ fun createGame(
     return Game(id, X, initialBoard().also { storage.create(id, it) })
 }
 
-fun Game.play(pos: Position, storage: BoardStorage): Game {
+fun Game.play(pos: Position, storage: BoardStorage, scope: CoroutineScope): Game {
     check(board is BoardRun) { "Game over" }
     check(player == board.turn) { "Not your turn" }
     val newBoard = board.play(pos)
-    storage.update(this.id, newBoard)
+    scope.launch {
+        storage.update(this@play.id, newBoard)
+    }
     return copy( board = newBoard)
 }

@@ -1,16 +1,30 @@
 package pt.isel.tds.storage
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.nio.file.Path
 import kotlin.io.path.*
 
-fun Path.writeText(text: CharSequence) {
-    writeText(text,Charsets.UTF_8)
-    repeat(3) {
-        Thread.sleep(1000)
-        print('.')
+suspend fun Path.writeText(text: CharSequence) {
+    withContext(Dispatchers.IO) {
+        writeText(text, Charsets.UTF_8)
+        repeat(3) {
+            Thread.sleep(1000)
+            print('w')
+        }
+        println()
     }
-    println()
 }
+
+suspend fun Path.readText(): String =
+    withContext(Dispatchers.IO) {
+        repeat(3) {
+            Thread.sleep(1000)
+            print('r')
+        }
+        println()
+        readText(Charsets.UTF_8)
+    }
 
 class FileStorage<K, T>(
     val folder: String,
@@ -24,7 +38,7 @@ class FileStorage<K, T>(
      * if it does not exist yet.
      * Throws IllegalArgumentException if there is already a file with that name.
      */
-    override fun create(id: K, value: T) {
+    override suspend fun create(id: K, value: T) {
         val path = path(id)
         val file = Path(path)
         require(!file.exists()) { "There is already a file with that id $id" }
@@ -32,14 +46,14 @@ class FileStorage<K, T>(
         file.writeText(stream)
     }
 
-    override fun read(id: K): T? {
+    override suspend fun read(id: K): T? {
         val file = Path(path(id))
         if(!file.exists()) return null
         val stream = file.readText()
         return serializer.parse(stream)
     }
 
-    override fun update(id: K, value: T) {
+    override suspend fun update(id: K, value: T) {
         val path = path(id)
         val file = Path(path)
         require(file.exists()) { "There is no file with that id $id" }
@@ -47,7 +61,7 @@ class FileStorage<K, T>(
         file.writeText(stream)
     }
 
-    override fun delete(id: K) {
+    override suspend fun delete(id: K) {
         val path = path(id)
         val file = Path(path)
         require(file.exists()) { "There is no file with that id $id" }

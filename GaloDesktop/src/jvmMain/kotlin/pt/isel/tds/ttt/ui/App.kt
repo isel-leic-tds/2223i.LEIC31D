@@ -19,7 +19,8 @@ import pt.isel.tds.ttt.model.*
 @Composable
 @Preview
 fun FrameWindowScope.GaloApp(onExit: ()->Unit ) {
-    val viewModel = remember { ViewModel() }
+    val scope = rememberCoroutineScope()
+    val viewModel = remember { ViewModel(scope) }
     GaloMenu(viewModel, onExit)
     if (viewModel.openDialog)
         DialogNewGame(
@@ -40,7 +41,10 @@ private fun FrameWindowScope.GaloMenu(
     MenuBar {
         Menu("Game") {
             Item("New") { viewModel.newGame() }
-            Item("Refresh", onClick = viewModel::refresh)
+            Item("Refresh",
+                onClick = viewModel::refresh,
+                enabled = viewModel.refreshEnable
+            )
             Item("Exit", onClick = onExit)
         }
     }
