@@ -1,19 +1,16 @@
 package pt.isel.tds.storage
 
-import com.mongodb.client.MongoDatabase
-import org.litote.kmongo.deleteOneById
-import org.litote.kmongo.findOneById
-import org.litote.kmongo.replaceOneById
+import org.litote.kmongo.coroutine.*
 
 class Doc(val _id: String, val data: String)
 
 class MongoStorage<T>(
-    val collectionName: String,
-    val db: MongoDatabase,
+    collectionName: String,
+    db: CoroutineDatabase,
     private val serializer: Serializer<T, String>
 ) : Storage<String,T> {
 
-    val collection = db.getCollection(collectionName, Doc::class.java)
+    private val collection = db.getCollection<Doc>(collectionName)
     /**
      * Requires a unique id.
      */

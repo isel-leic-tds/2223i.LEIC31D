@@ -41,10 +41,10 @@ private fun FrameWindowScope.GaloMenu(
     MenuBar {
         Menu("Game") {
             Item("New") { viewModel.newGame() }
-            Item("Refresh",
+            /*Item("Refresh",
                 onClick = viewModel::refresh,
                 enabled = viewModel.refreshEnable
-            )
+            )*/
             Item("Exit", onClick = onExit)
         }
     }

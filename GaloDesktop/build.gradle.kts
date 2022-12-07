@@ -27,8 +27,10 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation("org.litote.kmongo:kmongo:4.7.2")
+                implementation("com.github.javasync:RxIo:1.2.5")
+                implementation("org.litote.kmongo:kmongo:4.8.0")
                 implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.17.1")
+                implementation("org.litote.kmongo:kmongo-coroutine:4.8.0")
             }
         }
         val jvmTest by getting

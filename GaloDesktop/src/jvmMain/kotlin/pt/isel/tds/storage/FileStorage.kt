@@ -1,30 +1,15 @@
 package pt.isel.tds.storage
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.nio.file.Path
-import kotlin.io.path.*
+//import kotlinx.coroutines.Dispatchers
+//import kotlinx.coroutines.withContext
 
-suspend fun Path.writeText(text: CharSequence) {
-    withContext(Dispatchers.IO) {
-        writeText(text, Charsets.UTF_8)
-        repeat(3) {
-            Thread.sleep(1000)
-            print('w')
-        }
-        println()
-    }
-}
+import org.javaync.io.*
+import kotlin.io.path.Path
+import kotlin.io.path.exists
+import kotlin.io.path.deleteExisting
 
-suspend fun Path.readText(): String =
-    withContext(Dispatchers.IO) {
-        repeat(3) {
-            Thread.sleep(1000)
-            print('r')
-        }
-        println()
-        readText(Charsets.UTF_8)
-    }
+//import java.nio.file.*
+//import kotlin.io.path.*
 
 class FileStorage<K, T>(
     val folder: String,

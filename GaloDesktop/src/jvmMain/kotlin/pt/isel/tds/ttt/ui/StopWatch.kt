@@ -23,7 +23,6 @@ class StopWatch {
     fun start() {
         if (job==null) {
             job = scope.launch {
-                println("start(): ${Thread.currentThread().name}")
                 var timeStamp = System.currentTimeMillis()
                 while (true) {
                     delay(100)
