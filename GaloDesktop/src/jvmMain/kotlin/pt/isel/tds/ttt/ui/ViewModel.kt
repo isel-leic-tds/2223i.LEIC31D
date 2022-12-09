@@ -5,14 +5,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pt.isel.tds.storage.FileStorage
-import pt.isel.tds.storage.MongoStorage
 import pt.isel.tds.ttt.model.*
 import pt.isel.tds.ttt.storage.BoardSerializer
 import pt.isel.tds.ttt.storage.BoardStorage
-
+import kotlin.time.Duration.Companion.seconds
+// Momgo imports
+import pt.isel.tds.storage.MongoStorage
 import org.litote.kmongo.reactivestreams.*
 import org.litote.kmongo.coroutine.*
-import kotlin.time.Duration.Companion.seconds
 
 class ViewModel(private val scope: CoroutineScope) {
     val refreshEnable: Boolean
@@ -54,9 +54,10 @@ class ViewModel(private val scope: CoroutineScope) {
         game = g
     }
 
-    private fun isPlayerTurn(): Boolean {
+    private fun isPlayerTurn(board: Board? = null): Boolean {
         val g = game ?: return false
-        return g.board is BoardRun && g.player== g.board.turn
+        val brd = board ?: g.board
+        return brd is BoardRun && g.player== brd.turn
     }
 
     fun play(pos: Position) {
@@ -71,12 +72,15 @@ class ViewModel(private val scope: CoroutineScope) {
 
     private suspend fun autoRefresh(g: Game) {
         var board: Board?
+        //print("AutoRefresh:")
         do {
             delay(3.seconds)
             board = storage.read(g.id)
-        } while (! isPlayerTurn())
+            //print('.')
+        } while (board is BoardRun && ! isPlayerTurn(board))
         checkNotNull(board)
         updateGame(g.copy(board = board))
+        //println("#")
     }
 
     fun refresh() {
