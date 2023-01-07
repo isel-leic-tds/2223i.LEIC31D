@@ -1,7 +1,13 @@
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 
@@ -41,6 +47,54 @@ fun Double.format(digs: Int) = "%.${digs}f".format(this)
 fun Grade.partialValue(eval: Eval): Double = eval.quotation/100.0 * value
 
 @Composable
-fun DemoEvalEdit(grade: Grade, onChange: (Double)->Unit) {
+@Preview
+fun TestEvalEdit() {
+    EvalEdit(checkNotNull(Eval.of(Eval.MAX))) { }
+}
 
+@Composable
+fun SymbolButton(symbol: Char, enabled: Boolean, onClick: ()->Unit) {
+    Button(onClick = onClick, enabled = enabled) {
+        Text("$symbol")
+    }
+}
+
+@Composable
+fun EvalEdit(eval: Eval, set: (Eval)->Unit) {
+    Row(
+        modifier = Modifier.border(2.dp, Color.Gray ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        SymbolButton('-', eval.quotation != Eval.MIN ) { set(eval.dec()) }
+        TextField(
+            value = "${eval.quotation}",
+            onValueChange = { txt ->
+                txt.toIntOrNull()?.let { q -> Eval.of(q)?.let { set(it) } }
+            },
+            modifier = Modifier.width(65.dp)
+        )
+        Text("%")
+        SymbolButton('+', eval.quotation != Eval.MAX ) { set(eval.inc()) }
+    }
+}
+
+@Composable
+fun DemoEvalEdit(grade: Grade, onChange: (Double)->Unit) {
+    var eval by remember { mutableStateOf(Eval.default) }
+    val partial = grade.partialValue(eval)
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        EvalEdit(eval) {
+            eval = it
+            onChange(grade.partialValue(it))
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("of ${grade.value} values = ")
+            Text("${partial.format(2)}", style = MaterialTheme.typography.h4)
+        }
+    }
 }
